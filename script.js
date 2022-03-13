@@ -29,6 +29,10 @@ function randomNumber(min, max) {
     return Math.random() * (max - min) + min;
 }
 
+function randomRoundNumber(min, max) {
+    return Math.round(randomNumber(min, max));    
+}
+
 const params = {
     width: 500,
     height: 500
@@ -39,50 +43,76 @@ const two = new Two(params);
 two.appendTo(container);
 
 const numberOfShapes = 25;
-const shapeMin = 0;
-const shapeMax = 500;
-shapeDif = shapeMax - shapeMin;
 
-const loopDuration = 4 * 60;
+const loopDuration = 6 * 60;
 
 const shapes = [];
+
+aDelay = 0.0025;
 
 
 //bezier animation and shapes
 for (let i = 0; i < numberOfShapes; i++) {
-    const x = 250;
-    const y = 20 * i + 5;
+
+    const size = 20;
+    const sx = size * i + 10;
+    const sy = 250;
+    const sr = 0;
+    const ss = 1;
+    const ex = randomNumber(50, 450)
+    const ey = randomNumber(50, 450)
+    const er = randomNumber(-2 * fullRotation, 2 * fullRotation);
+    const es = randomNumber(0.5, 1.4);
+
 
     // const size = (numberOfShapes - i) * shapeIncr;
 
-    const shape = two.makeRectangle(x, y, shapeMax, 10);
-    shape.fill = '#5645d3';
+    const shape = two.makeRectangle(sx, sy, size, size);
+    shape.fill = '#004f73';
+    shape.data = {
+        sx: sx,
+        sy: sy,
+        sr: sr,
+        ss: ss,
+        ex: ex,
+        ey: ey,
+        er: er,
+        es: es
+    }
     shape.noStroke();
 
     shapes.push(shape);
 
 }
 
-let t = 0;
+
 
 //bezier animation and shapes
 two.bind('update', function (frameCount) {
-    // const currentFrame = frameCount % loopDuration;
-    // const t = currentFrame / loopDuration;
+    const currentFrame = frameCount % loopDuration;
+    const t = currentFrame / loopDuration;
     shapes.forEach((shape, i) => {
-        const aStart =  0.01 * (numberOfShapes - i);
-
-        const aEnd = 0.01 * i;
+        const aStart = aDelay * (numberOfShapes - i);
+        const aEnd = aDelay * i; 
 
         let u = 0;
-        if (t < 0.5) {
-            u = mapAndClamp(t, aStart, 0.5 - aEnd, 0, 1);
-        } else {
-            u = mapAndClamp(t,0.5 + aStart, 1 - aEnd, 1, 0);
-        }
-        shape.width = shapeMin + shapeDif * easeInOutCubic(u);
 
-        shape.translation.x = 750 * easeInOutCubic(u);
+        if (t < 0.5) {
+            u = mapAndClamp(t, aStart, 0.5 - aEnd, 0, 1);            
+        } else {
+            u = mapAndClamp(t, 0.5 + aStart, 1 - aEnd, 1, 0);
+        }
+
+        const cu = easeInOutCubic(u);
+
+        const x = mapAndClamp(cu, 0, 1, shape.data.sx, shape.data.ex);
+        const y = mapAndClamp(cu, 0, 1, shape.data.sy, shape.data.ey);
+        const r = mapAndClamp(cu, 0, 1, shape.data.sr, shape.data.er);
+        const s = mapAndClamp(cu, 0, 1, shape.data.ss, shape.data.es);
+        shape.translation.x = x;
+        shape.translation.y = y;
+        shape.rotation = r;
+        shape.scale = s;
     })
 })
 
@@ -93,12 +123,7 @@ two.bind('update', function (frameCount) {
 // })
 
 //change animation on scroll
-document.addEventListener('scroll', (event) => {
-    const scrollY = window.pageYOffset;
-    const scrollMax = 3000 - window.innerHeight;
 
-    t = mapAndClamp(scrollY, 0, scrollMax, 0, 1)
-})
 
 two.play();
 

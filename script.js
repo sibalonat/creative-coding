@@ -6,6 +6,9 @@ function easeInOutCubic(t) {
     return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
 }
 
+// other easing function can be found at this link
+// https://gist.github.com/gre/1650294
+
 const fullRotation = Math.PI * 2;
 const halfRotation = Math.PI;
 

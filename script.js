@@ -66,41 +66,21 @@ for (let i = 0; i < numberOfShapes; i++) {
 
 //bezier animation and shapes
 two.bind('update', function (frameCount) {
-
     const currentFrame = frameCount % loopDuration;
-
     const t = currentFrame / loopDuration;
     shapes.forEach((shape, i) => {
-        const aStart =  0.001 * (numberOfShapes - i);
-        // const aStart =  aDelay * i;
-        const aEnd = aDelay * i;
-        // const aEnd = aDelay * (numberOfShapes - i);
-        const u = mapAndClamp(t, aStart, 1 - aEnd, 0, 1)
-        shape.width = shapeMin + shapeDif * easeInOutCubic(t);
-        // const aStart =  aDelay * i;
-        // const aEnd = aDelay * (numberOfShapes - i);
+        const aStart =  0.01 * (numberOfShapes - i);
 
-        // const u = mapAndClamp(t, aStart, 1 - aEnd, 0, 1);
+        const aEnd = 0.01 * i;
 
-        // if (i % 2 === 0) {
-        //     shape.rotation = easeInOutCubic(u) * halfRotation;
-        // } else {
-        //     shape.rotation = -1 * easeInOutCubic(u) * halfRotation;
-        // }
+        let u = 0;
+        if (t < 0.5) {
+            u = mapAndClamp(t, aStart, 0.5 - aEnd, 0, 1);
+        } else {
+            u = mapAndClamp(t,0.5 + aStart, 1 - aEnd, 1, 0);
+        }
+        shape.width = shapeMin + shapeDif * easeInOutCubic(u);
     })
-    // shapes.forEach((shape, i) => {
- 
-    //     const aStart =  aDelay * i;
-    //     const aEnd = aDelay * (numberOfShapes - i);
-
-    //     const u = mapAndClamp(t, aStart, 1 - aEnd, 0, 1);
-
-    //     if (i % 2 === 0) {
-    //         shape.rotation = easeInOutCubic(u) * halfRotation;
-    //     } else {
-    //         shape.rotation = -1 * easeInOutCubic(u) * halfRotation;
-    //     }
-    // })
 })
 
 two.play();

@@ -63,11 +63,12 @@ for (let i = 0; i < numberOfShapes; i++) {
 
 }
 
+let t = 0;
 
 //bezier animation and shapes
 two.bind('update', function (frameCount) {
-    const currentFrame = frameCount % loopDuration;
-    const t = currentFrame / loopDuration;
+    // const currentFrame = frameCount % loopDuration;
+    // const t = currentFrame / loopDuration;
     shapes.forEach((shape, i) => {
         const aStart =  0.01 * (numberOfShapes - i);
 
@@ -80,10 +81,91 @@ two.bind('update', function (frameCount) {
             u = mapAndClamp(t,0.5 + aStart, 1 - aEnd, 1, 0);
         }
         shape.width = shapeMin + shapeDif * easeInOutCubic(u);
+
+        shape.translation.x = 750 * easeInOutCubic(u);
     })
 })
 
+
+// change animation on mouse move
+// document.addEventListener('mousemove', (event) => {
+//     t = mapAndClamp(event.pageX, 0, window.innerWidth, 0, 1);
+// })
+
+//change animation on scroll
+document.addEventListener('scroll', (event) => {
+    const scrollY = window.pageYOffset;
+    const scrollMax = 3000 - window.innerHeight;
+
+    t = mapAndClamp(scrollY, 0, scrollMax, 0, 1)
+})
+
 two.play();
+
+// mouse interaction animation and pivot looks animation
+// const numberOfShapes = 25;
+// const shapeMin = 0;
+// const shapeMax = 500;
+// shapeDif = shapeMax - shapeMin;
+
+// const loopDuration = 4 * 60;
+
+// const shapes = [];
+
+
+// //bezier animation and shapes
+// for (let i = 0; i < numberOfShapes; i++) {
+//     const x = 250;
+//     const y = 20 * i + 5;
+
+//     // const size = (numberOfShapes - i) * shapeIncr;
+
+//     const shape = two.makeRectangle(x, y, shapeMax, 10);
+//     shape.fill = '#5645d3';
+//     shape.noStroke();
+
+//     shapes.push(shape);
+
+// }
+
+// let t = 0;
+
+// //bezier animation and shapes
+// two.bind('update', function (frameCount) {
+//     // const currentFrame = frameCount % loopDuration;
+//     // const t = currentFrame / loopDuration;
+//     shapes.forEach((shape, i) => {
+//         const aStart =  0.01 * (numberOfShapes - i);
+
+//         const aEnd = 0.01 * i;
+
+//         let u = 0;
+//         if (t < 0.5) {
+//             u = mapAndClamp(t, aStart, 0.5 - aEnd, 0, 1);
+//         } else {
+//             u = mapAndClamp(t,0.5 + aStart, 1 - aEnd, 1, 0);
+//         }
+//         shape.width = shapeMin + shapeDif * easeInOutCubic(u);
+
+//         shape.translation.x = 750 * easeInOutCubic(u);
+//     })
+// })
+
+
+// // change animation on mouse move
+// // document.addEventListener('mousemove', (event) => {
+// //     t = mapAndClamp(event.pageX, 0, window.innerWidth, 0, 1);
+// // })
+
+// //change animation on scroll
+// document.addEventListener('scroll', (event) => {
+//     const scrollY = window.pageYOffset;
+//     const scrollMax = 3000 - window.innerHeight;
+
+//     t = mapAndClamp(scrollY, 0, scrollMax, 0, 1)
+// })
+
+// two.play();
 
 // project2
 // const loopDuration = 60 * 4;

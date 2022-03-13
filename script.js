@@ -1,6 +1,5 @@
 const container = document.querySelector('section');
 
-// console.log(container);
 
 function easeInOutCubic(t) {
     return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
@@ -41,11 +40,10 @@ two.appendTo(container);
 const loopDuration = 60 * 4;
 const numberOfShapes = 40;
 const shapeIncr = 20;
+const aDelay = 1 / 120;
 const plotRadius = 150;
 
 const shapes = [];
-
-
 
 
 //bezier animation and shapes
@@ -72,13 +70,86 @@ two.bind('update', function (frameCount) {
     const currentFrame = frameCount % loopDuration;
 
     const t = currentFrame / loopDuration;
-    shapes.forEach(shape => {
-        shape.rotation = easeInOutCubic(t) * halfRotation;
-        // shape.rotation += 0.005;
+    shapes.forEach((shape, i) => {
+ 
+        const aStart =  aDelay * i;
+        const aEnd = aDelay * (numberOfShapes - i);
+
+        const u = mapAndClamp(t, aStart, 1 - aEnd, 0, 1);
+
+        if (i % 2 === 0) {
+            shape.rotation = easeInOutCubic(u) * halfRotation;
+        } else {
+            shape.rotation = -1 * easeInOutCubic(u) * halfRotation;
+        }
     })
 })
 
 two.play();
+
+// project2
+// const loopDuration = 60 * 4;
+// const numberOfShapes = 40;
+// const shapeIncr = 20;
+// const aDelay = 1 / 120;
+// const plotRadius = 150;
+
+// const shapes = [];
+
+
+// //bezier animation and shapes
+// for (let i = 0; i < numberOfShapes; i++) {
+
+//     const size = (numberOfShapes - i) * shapeIncr;
+
+//     const shape = two.makeRectangle(250, 250, size, size);
+
+//     if (i % 2 === 0) {
+//         shape.fill = '#f9d2cd';
+//     } else {
+//         shape.fill = '#f55745';
+//     }
+//     shape.noStroke();
+
+//     shapes.push(shape);
+
+// }
+
+
+// //bezier animation and shapes
+// two.bind('update', function (frameCount) {
+//     const currentFrame = frameCount % loopDuration;
+
+//     const t = currentFrame / loopDuration;
+//     shapes.forEach((shape, i) => {
+//         // para
+//         // const aStart = aDelay * (numberOfShapes - i);
+//         //mbrapsht
+//         const aStart = aDelay * i;
+//         // const aStart = 0.1;
+//         // para
+//         // const aEnd = aDelay * i;
+//         //mbrapsht
+//         const aEnd = aDelay * (numberOfShapes - i);
+
+//         const u = mapAndClamp(t, aStart, 1 - aEnd, 0, 1);
+//         //varianti3
+//         if (i % 2 === 0) {
+//             shape.rotation = easeInOutCubic(u) * halfRotation;
+//         } else {
+//             shape.rotation = -1 * easeInOutCubic(u) * halfRotation;
+//         }
+//         //varianti2
+//         // if (i % 2 === 0) {
+//         //     shape.rotation = easeInOutCubic(u) * halfRotation;
+//         // }
+//         //varianti1
+//         // shape.rotation = easeInOutCubic(u) * halfRotation;
+//         // shape.rotation += 0.005;
+//     })
+// })
+
+// two.play();
 
 
 // simple rectangles or lines

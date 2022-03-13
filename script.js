@@ -1,4 +1,5 @@
-const container = document.querySelector('section');
+// const container = document.querySelector('section');
+const container = document.querySelector('.drawing-area');
 
 
 function easeInOutCubic(t) {
@@ -37,27 +38,25 @@ const two = new Two(params);
 
 two.appendTo(container);
 
-const loopDuration = 60 * 4;
-const numberOfShapes = 40;
-const shapeIncr = 20;
-const aDelay = 1 / 120;
-const plotRadius = 150;
+const numberOfShapes = 25;
+const shapeMin = 0;
+const shapeMax = 500;
+shapeDif = shapeMax - shapeMin;
+
+const loopDuration = 4 * 60;
 
 const shapes = [];
 
 
 //bezier animation and shapes
 for (let i = 0; i < numberOfShapes; i++) {
+    const x = 250;
+    const y = 20 * i + 5;
 
-    const size = (numberOfShapes - i) * shapeIncr;
+    // const size = (numberOfShapes - i) * shapeIncr;
 
-    const shape = two.makeRectangle(250, 250, size, size);
-
-    if (i % 2 === 0) {
-        shape.fill = '#f9d2cd';
-    } else {
-        shape.fill = '#f55745';
-    }
+    const shape = two.makeRectangle(x, y, shapeMax, 10);
+    shape.fill = '#5645d3';
     shape.noStroke();
 
     shapes.push(shape);
@@ -67,22 +66,41 @@ for (let i = 0; i < numberOfShapes; i++) {
 
 //bezier animation and shapes
 two.bind('update', function (frameCount) {
+
     const currentFrame = frameCount % loopDuration;
 
     const t = currentFrame / loopDuration;
     shapes.forEach((shape, i) => {
- 
-        const aStart =  aDelay * i;
-        const aEnd = aDelay * (numberOfShapes - i);
+        const aStart =  0.001 * (numberOfShapes - i);
+        // const aStart =  aDelay * i;
+        const aEnd = aDelay * i;
+        // const aEnd = aDelay * (numberOfShapes - i);
+        const u = mapAndClamp(t, aStart, 1 - aEnd, 0, 1)
+        shape.width = shapeMin + shapeDif * easeInOutCubic(t);
+        // const aStart =  aDelay * i;
+        // const aEnd = aDelay * (numberOfShapes - i);
 
-        const u = mapAndClamp(t, aStart, 1 - aEnd, 0, 1);
+        // const u = mapAndClamp(t, aStart, 1 - aEnd, 0, 1);
 
-        if (i % 2 === 0) {
-            shape.rotation = easeInOutCubic(u) * halfRotation;
-        } else {
-            shape.rotation = -1 * easeInOutCubic(u) * halfRotation;
-        }
+        // if (i % 2 === 0) {
+        //     shape.rotation = easeInOutCubic(u) * halfRotation;
+        // } else {
+        //     shape.rotation = -1 * easeInOutCubic(u) * halfRotation;
+        // }
     })
+    // shapes.forEach((shape, i) => {
+ 
+    //     const aStart =  aDelay * i;
+    //     const aEnd = aDelay * (numberOfShapes - i);
+
+    //     const u = mapAndClamp(t, aStart, 1 - aEnd, 0, 1);
+
+    //     if (i % 2 === 0) {
+    //         shape.rotation = easeInOutCubic(u) * halfRotation;
+    //     } else {
+    //         shape.rotation = -1 * easeInOutCubic(u) * halfRotation;
+    //     }
+    // })
 })
 
 two.play();

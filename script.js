@@ -11,7 +11,7 @@ const two = new Two(params);
 
 two.appendTo(container);
 
-const numberOfShapes = 12;
+const numberOfShapes = 40;
 const plotRadius = 150;
 
 const shapes = [];
@@ -23,12 +23,17 @@ for (let i = 0; i < numberOfShapes; i++) {
     const angle = fullRotation * i / numberOfShapes;  
 
     // const x = 250;
-    const x = 250 + plotRadius * Math.cos(angle);
+    const x = plotRadius * Math.cos(angle);
     // const x = i * 30 + 30;
     // const y = 250;
-    const y = 250 + plotRadius * Math.sin(angle);
+    const y = plotRadius * Math.sin(angle);
 
     // const shape = two.makeRectangle(x, y, 100, 100);
+    // these used to be just rectangles before being turned into rectangles that have more the apperance of the lines;
+    // const shape = two.makeRectangle(x, y, 50, 50);
+    // these now lookes like lines
+    // const shape = two.makeRectangle(x, y, 150, 10);
+    // bigger rectangles
     const shape = two.makeRectangle(x, y, 50, 50);
     shape.fill = '#f9bc31';
     shape.noStroke();
@@ -39,10 +44,38 @@ for (let i = 0; i < numberOfShapes; i++) {
 
 }
 
+const group = two.makeGroup(shapes);
+
+group.translation.set(250, 250);
+
+let scaler = 1;
+
+let scaling = 'grow';
+
 
 two.bind('update', function() {
+
+    group.rotation += 0.005;
+
+    if (scaling === 'grow') {
+        scaler += 0.005;
+    }
+    if (scaling === 'shrink') {
+        scaler -= 0.005;
+    }
+
+    if (scaler > 3) {
+        scaling = 'shrink';
+    }
+
+    if (scaler < 0.5) {
+        scaling = 'grow';
+    }
+
+
     shapes.forEach(shape => {
-        shape.rotation += 0.025;
+        shape.rotation += 0.006125;
+        shape.scale = scaler;
     })
 })
 

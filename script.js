@@ -3,15 +3,18 @@ const container = document.querySelector('section');
 // console.log(container);
 
 function easeInOutCubic(t) {
-    return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;    
+    return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
 }
 
+const fullRotation = Math.PI * 2;
+const halfRotation = Math.PI;
+
 function clamp(input, min, max) {
-    return Math.max(min, Math.min(input, max));    
+    return Math.max(min, Math.min(input, max));
 }
 
 function map(value, low1, high1, low2, high2) {
-    return low2 + ((high2 - low2) * (value - low1)) / (high1 - low1);    
+    return low2 + ((high2 - low2) * (value - low1)) / (high1 - low1);
 }
 
 function mapAndClamp(value, low1, high1, low2, high2) {
@@ -19,11 +22,11 @@ function mapAndClamp(value, low1, high1, low2, high2) {
         map(value, low1, high1, low2, high2),
         Math.min(low2, high2),
         Math.max(low2, high2)
-    )    
+    )
 }
 
 function randomNumber(min, max) {
-    return Math.random() * (max - min) + min;    
+    return Math.random() * (max - min) + min;
 }
 
 const params = {
@@ -35,17 +38,53 @@ const two = new Two(params);
 
 two.appendTo(container);
 
+const loopDuration = 60 * 4;
 const numberOfShapes = 40;
+const shapeIncr = 20;
 const plotRadius = 150;
 
 const shapes = [];
 
 
+
+
+//bezier animation and shapes
+for (let i = 0; i < numberOfShapes; i++) {
+
+    const size = (numberOfShapes - i) * shapeIncr;
+
+    const shape = two.makeRectangle(250, 250, size, size);
+
+    if (i % 2 === 0) {
+        shape.fill = '#f9d2cd';
+    } else {
+        shape.fill = '#f55745';
+    }
+    shape.noStroke();
+
+    shapes.push(shape);
+
+}
+
+
+//bezier animation and shapes
+two.bind('update', function (frameCount) {
+    const currentFrame = frameCount % loopDuration;
+
+    const t = currentFrame / loopDuration;
+    shapes.forEach(shape => {
+        shape.rotation = easeInOutCubic(t) * halfRotation;
+        // shape.rotation += 0.005;
+    })
+})
+
+two.play();
+
+
 // simple rectangles or lines
 
 // for (let i = 0; i < numberOfShapes; i++) {
-//     const fullRotation = Math.PI * 2;
-//     const halfRotation = Math.PI;
+
 
 //     const angle = fullRotation * i / numberOfShapes;  
 
@@ -71,31 +110,13 @@ const shapes = [];
 
 // }
 
-//bezier animation and shapes
-for (let i = 0; i < numberOfShapes; i++) {
+// const group = two.makeGroup(shapes);
 
-    const size = 100;
+// group.translation.set(250, 250);
 
-    const shape = two.makeRectangle(250, 250, size, size);
-    shape.fill = '#f55745';
-    shape.noStroke();
+// let scaler = 1;
 
-    shapes.push(shape);
-
-}
-
-const group = two.makeGroup(shapes);
-
-group.translation.set(250, 250);
-
-let scaler = 1;
-
-let scaling = 'grow';
-
-//bezier animation and shapes
-two.bind('update', function() {
-    
-})
+// let scaling = 'grow';
 
 // simple rectangles and animation
 // two.bind('update', function() {
@@ -124,6 +145,8 @@ two.bind('update', function() {
 //     })
 // })
 
+
+
 // shape.fill = '#f9bc31';
 // shape.noStroke();
 // shape.rotation = Math.PI * 0.25;
@@ -132,4 +155,4 @@ two.bind('update', function() {
 //      shape.rotation += 0.05;
 // })
 
-two.play();
+// two.play();

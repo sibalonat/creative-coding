@@ -1,8 +1,13 @@
 body{
     background-color: #45d3c6;
+    transition: background-color 1s;
     /* background-color: #f9d2cd; */
     /* background-color: #ffe8b4; */
     /* height: 3000px; */
+}
+
+path {
+    transition: fill 1s;
 }
 
 section {

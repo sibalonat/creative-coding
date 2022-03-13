@@ -117,13 +117,6 @@ two.bind('update', function (frameCount) {
 })
 
 
-// change animation on mouse move
-// document.addEventListener('mousemove', (event) => {
-//     t = mapAndClamp(event.pageX, 0, window.innerWidth, 0, 1);
-// })
-
-//change animation on scroll
-
 
 two.play();
 
